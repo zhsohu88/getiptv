@@ -9,8 +9,8 @@ url = "http://file.91kds.cn/tvlist/2025030711/kds_all_lnyd.txt"
 
 # 设置请求头，模拟浏览器访问，避免被服务器拒绝
 headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/114 Safari/537.36",
-    "Referer": "http://file.91kds.cn/",  # 来源页面，部分服务器会校验
+    "User-Agent": "MTV",
+    # "Referer": "http://file.91kds.cn/",  # 来源页面，部分服务器会校验
     "Connection": "Keep-Alive"           # 保持连接，提高效率
 }
 
