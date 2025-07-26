@@ -1,35 +1,37 @@
-name: Auto Update IPTV List
+name: Run getiptv script
 
 on:
-  schedule:
-    - cron: '0 2 * * *'  # 每天北京时间上午10点运行
-  workflow_dispatch:
+  workflow_dispatch:  # 手动触发（你也可以改成 schedule 定时触发）
 
 permissions:
-  contents: write  # 允许 github-actions[bot] 推送更改
+  contents: write  # 允许推送更改（推送权限）
 
 jobs:
-  update-iptv:
+  run-script:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
 
-      - name: Set up Python
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🐍 Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: "3.10"
 
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: |
-          pip install requests
+          pip install requests chardet
 
-      - name: Run IPTV script
+      - name: ▶️ Run getiptv.py
         run: python getiptv.py
 
-      - name: Commit and push changes
+      - name: 📝 Commit output file (if needed)
         run: |
-          git config --global user.name "zhsohu88"
-          git config --global user.email "zhsohu8869@gmail.com"
-          git pull origin main
-          git add user_local.txt
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto update IPTV list" && git push)
+          if [ -f "user_local.txt" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add user_local.txt
+            git commit -m "Update user_local.txt from getiptv.py"
+            git push
+          fi
