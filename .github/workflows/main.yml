@@ -1,39 +1,39 @@
-name: Run getiptv script
+name: Run getiptv script  # 工作流程名称
 
 on:
-  workflow_dispatch:  # 手动触发
-  schedule:
-    - cron: '0 23 * * *'  # 每天北京时间 07:00 运行
+  workflow_dispatch:  # 支持手动触发
+  schedule:            # 定时触发（每天北京时间 07:00）
+    - cron: '0 23 * * *'  # GitHub 使用 UTC 时间，23:00 UTC = 北京时间 07:00
 
 permissions:
-  contents: write
+  contents: write  # 允许工作流程推送代码到仓库（权限）
 
 jobs:
-  run-script:
-    runs-on: ubuntu-latest
+  run-script:  # 定义一个名为 run-script 的任务
+    runs-on: ubuntu-latest  # 使用最新版本的 Ubuntu 虚拟环境
 
     steps:
-      - name: 📥 Checkout repository
+      - name: 📥 Checkout repository  # 第一步：拉取仓库代码
         uses: actions/checkout@v3
 
-      - name: 🐍 Set up Python
+      - name: 🐍 Set up Python  # 第二步：设置 Python 环境
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.10"  # 使用 Python 3.10
 
-      - name: 📦 Install dependencies
+      - name: 📦 Install dependencies  # 第三步：安装依赖库
         run: |
-          pip install requests chardet
+          pip install requests chardet  # 安装 requests 和 chardet 库
 
-      - name: ▶️ Run getiptv.py
+      - name: ▶️ Run getiptv.py  # 第四步：运行 Python 脚本
         run: python getiptv.py
 
-      - name: 📝 Commit output file (if needed)
+      - name: 📝 Commit output file (if needed)  # 第五步：如果生成了 user_local.txt，就提交到仓库
         run: |
           if [ -f "user_local.txt" ]; then
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add user_local.txt
-            git commit -m "Update user_local.txt from getiptv.py"
-            git push
+            git config user.name "github-actions[bot]"  # 设置提交用户名
+            git config user.email "github-actions[bot]@users.noreply.github.com"  # 设置提交邮箱
+            git add user_local.txt  # 添加文件到 Git 暂存区
+            git commit -m "Update user_local.txt from getiptv.py"  # 提交更改
+            git push  # 推送到远程仓库
           fi
