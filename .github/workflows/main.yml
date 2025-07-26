@@ -1,1 +1,33 @@
 
+name: Fetch IPTV List
+
+on:
+  workflow_dispatch:  # 手动触发
+  # schedule:           # 定时触发（每天 UTC 0 点，即北京时间 8 点）
+    - cron: '0 0 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run IPTV script
+        run: python getiptv.py
+
+      - name: Commit updated playlist
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add user_local.txt
+          git commit -m "Update IPTV list"
+          git push
