@@ -1,10 +1,12 @@
 name: Run getiptv script
 
 on:
-  workflow_dispatch:  # 手动触发（你也可以改成 schedule 定时触发）
+  workflow_dispatch:  # 手动触发
+  schedule:
+    - cron: '0 23 * * *'  # 每天北京时间 07:00 运行
 
 permissions:
-  contents: write  # 允许推送更改（推送权限）
+  contents: write
 
 jobs:
   run-script:
